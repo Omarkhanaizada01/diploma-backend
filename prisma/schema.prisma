@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int        @id @default(autoincrement())
+  name     String
+  email    String     @unique
+  password String
+  role     Role       @default(USER)
+  orders   Order[]
+  cart     CartItem[]
+  wishlist Wishlist[]
+  reviews  Review[]
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  isPopular Boolean   @default(false) // ✅ новое поле
+  products  Product[]
+}
+
+model Product {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String
+  image       String
+  price       Float
+  oldPrice    Float? // ✅ новое поле
+  salePercent Int? // ✅ новое поле
+  inStock     Boolean    @default(true)
+  isNew       Boolean    @default(false)
+  isOnSale    Boolean    @default(false)
+  isPopular   Boolean    @default(false) // ✅ новое поле
+  isHotDeal   Boolean    @default(false) // ✅ новое поле
+  isFeatured  Boolean    @default(false) // ✅ новое поле
+  categoryId  Int
+  category    Category   @relation(fields: [categoryId], references: [id])
+  userId      Int
+  reviews     Review[]
+  wishlist    Wishlist[]
+  cartItems   CartItem[]
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  total     Float
+  status    String   @default("pending")
+}
+
+model Wishlist {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int     @default(1)
+}
+
+enum Role {
+  USER
+  ADMIN
+}
