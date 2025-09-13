@@ -5,25 +5,28 @@ const router = express.Router();
 const {
   getAllUsers,
   getUserById,
+  getCurrentUser,
   createUser,
   updateUser,
   deleteUser,
   login,
-  logout
+  logout,
 } = require("../controllers/userController");
 
 const auth = require("../middleware/auth");
 
-// 🔐 Авторизация (логин)
+// 🔐 Авторизация (логин/логаут)
 router.post("/login", login);
+router.post("/logout", logout);
 
-// описываем все роуты
-router.get("/", auth, getAllUsers);  
+// 🔐 Текущий пользователь
+router.get("/me", auth, getCurrentUser);
+
+// 👥 Пользователи
+router.get("/", auth, getAllUsers);
 router.get("/:id", auth, getUserById);
 router.post("/", createUser);
 router.put("/:id", auth, updateUser);
 router.delete("/:id", auth, deleteUser);
-
-router.post("/logout", logout);
 
 module.exports = router;

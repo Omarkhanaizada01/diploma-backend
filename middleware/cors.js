@@ -1,8 +1,12 @@
+// middleware/cors.js
 const cors = require("cors");
 
 const allowedOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(",")
-  : ["http://localhost:3000"];
+  : [
+      "http://localhost:3000",
+      "https://product-shop-nine.vercel.app",
+    ];
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -12,8 +16,8 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true,
+  credentials: true, // ✅ обязательно, чтобы cookie ходили
 };
 
-// ✅ экспортируем функцию, чтобы потом вызвать в index.js
 module.exports = () => cors(corsOptions);
+

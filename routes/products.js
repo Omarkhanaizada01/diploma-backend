@@ -8,20 +8,16 @@ const {
   deleteProduct,
 } = require("../controllers/productController");
 
-// const auth = require("../middleware/auth"); // 🔒 В будущем включи защиту
+const auth = require("../middleware/auth");
+const isAdmin = require("../middleware/isAdmin");
 
+// Все могут просматривать
 router.get("/", getAllProducts);
 router.get("/:id", getProductById);
 
-// Временно без защиты:
-router.post("/", createProduct);
-// В будущем:
-// router.post("/", auth, createProduct);
-
-router.put("/:id", updateProduct);
-// router.put("/:id", auth, updateProduct);
-
-router.delete("/:id", deleteProduct);
-// router.delete("/:id", auth, deleteProduct);
+// Только админ может изменять
+router.post("/", auth, isAdmin, createProduct);
+router.put("/:id", auth, isAdmin, updateProduct);
+router.delete("/:id", auth, isAdmin, deleteProduct);
 
 module.exports = router;

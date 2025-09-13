@@ -1,23 +1,20 @@
 const express = require("express");
-const cors = require("./middleware/cors"); // теперь это функция
+const cors = require("./middleware/cors"); // функция cors
 const cookieParser = require("cookie-parser");
-const path = require("path");
 
 const categoryRoutes = require("./routes/category");
 const productRoutes = require("./routes/products");
 const userRoutes = require("./routes/users");
-const uploadRoutes = require("./routes/upload"); // файл upload.js
+const uploadRoutes = require("./routes/upload");
 
 const app = express();
 
 // middleware
-app.use(cors()); // ✅ вызываем функцию
+app.use(cors()); // вызов функции
 app.use(express.json());
 app.use(cookieParser());
 
-
-
-// ✅ подключаем все роуты с префиксом /api
+// подключаем роуты с префиксом /api
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
