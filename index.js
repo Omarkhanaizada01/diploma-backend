@@ -1,24 +1,29 @@
 const express = require("express");
-const cors = require("./middleware/cors");
+const cors = require("./middleware/cors"); // теперь это функция
 const cookieParser = require("cookie-parser");
+const path = require("path");
 
 const categoryRoutes = require("./routes/category");
 const productRoutes = require("./routes/products");
 const userRoutes = require("./routes/users");
+const uploadRoutes = require("./routes/upload"); // файл upload.js
 
 const app = express();
 
 // middleware
-app.use(cors);
+app.use(cors()); // ✅ вызываем функцию
 app.use(express.json());
 app.use(cookieParser());
+
+
 
 // ✅ подключаем все роуты с префиксом /api
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/upload", uploadRoutes);
 
-// health-check (чтобы легко проверить работает ли сервер)
+// health-check
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });

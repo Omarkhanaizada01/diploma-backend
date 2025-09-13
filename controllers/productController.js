@@ -72,21 +72,45 @@ exports.createProduct = async (req, res) => {
 };
 
 // Обновить продукт
+// Обновить продукт
 exports.updateProduct = async (req, res) => {
   const id = Number(req.params.id);
-  const data = req.body;
+  let data = req.body;
 
   try {
+    // Если прислали imageUrl — сохраняем в image
+    if (data.imageUrl) {
+      data.image = data.imageUrl;
+      delete data.imageUrl;
+    }
+
+    // Приведение типов (так как JSON в теле приходит строками)
+    if (data.price !== undefined) data.price = parseFloat(data.price);
+    if (data.oldPrice !== undefined) data.oldPrice = parseFloat(data.oldPrice);
+    if (data.salePercent !== undefined) data.salePercent = parseInt(data.salePercent);
+    if (data.categoryId !== undefined) data.categoryId = parseInt(data.categoryId);
+    if (data.userId !== undefined) data.userId = parseInt(data.userId);
+
+    if (data.inStock !== undefined) data.inStock = data.inStock === true || data.inStock === "true";
+    if (data.isNew !== undefined) data.isNew = data.isNew === true || data.isNew === "true";
+    if (data.isOnSale !== undefined) data.isOnSale = data.isOnSale === true || data.isOnSale === "true";
+    if (data.isFeatured !== undefined) data.isFeatured = data.isFeatured === true || data.isFeatured === "true";
+    if (data.isHotDeal !== undefined) data.isHotDeal = data.isHotDeal === true || data.isHotDeal === "true";
+    if (data.isPopular !== undefined) data.isPopular = data.isPopular === true || data.isPopular === "true";
+
     const updated = await prisma.product.update({
       where: { id },
       data,
     });
+
     res.json(updated);
   } catch (error) {
-    console.error(error);
-    res.status(400).json({ error: "Ошибка при обновлении продукта" });
+    console.error("❌ Ошибка при обновлении:", error);
+    res.status(400).json({ error: error.message, details: error }); 
   }
 };
+
+
 
 // Удалить продукт
 exports.deleteProduct = async (req, res) => {

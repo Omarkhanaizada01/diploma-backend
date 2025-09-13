@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,16 +13,16 @@ model User {
   email    String     @unique
   password String
   role     Role       @default(USER)
-  orders   Order[]
   cart     CartItem[]
-  wishlist Wishlist[]
+  orders   Order[]
   reviews  Review[]
+  wishlist Wishlist[]
 }
 
 model Category {
   id        Int       @id @default(autoincrement())
   name      String    @unique
-  isPopular Boolean   @default(false) // ✅ новое поле
+  isPopular Boolean   @default(false)
   products  Product[]
 }
 
@@ -38,37 +32,37 @@ model Product {
   description String
   image       String
   price       Float
-  oldPrice    Float? // ✅ новое поле
-  salePercent Int? // ✅ новое поле
   inStock     Boolean    @default(true)
   isNew       Boolean    @default(false)
   isOnSale    Boolean    @default(false)
-  isPopular   Boolean    @default(false) // ✅ новое поле
-  isHotDeal   Boolean    @default(false) // ✅ новое поле
-  isFeatured  Boolean    @default(false) // ✅ новое поле
+  salePercent Int?
   categoryId  Int
-  category    Category   @relation(fields: [categoryId], references: [id])
   userId      Int
+  isFeatured  Boolean    @default(false)
+  isHotDeal   Boolean    @default(false)
+  isPopular   Boolean    @default(false)
+  oldPrice    Float?
+  cartItems   CartItem[]
+  category    Category   @relation(fields: [categoryId], references: [id])
   reviews     Review[]
   wishlist    Wishlist[]
-  cartItems   CartItem[]
 }
 
 model Order {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
   userId    Int
   createdAt DateTime @default(now())
   total     Float
   status    String   @default("pending")
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Wishlist {
   id        Int     @id @default(autoincrement())
-  user      User    @relation(fields: [userId], references: [id])
   userId    Int
-  product   Product @relation(fields: [productId], references: [id])
   productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
 }
 
 model Review {
@@ -76,19 +70,19 @@ model Review {
   rating    Int
   comment   String
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
   userId    Int
-  product   Product  @relation(fields: [productId], references: [id])
   productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model CartItem {
   id        Int     @id @default(autoincrement())
-  user      User    @relation(fields: [userId], references: [id])
   userId    Int
-  product   Product @relation(fields: [productId], references: [id])
   productId Int
   quantity  Int     @default(1)
+  product   Product @relation(fields: [productId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
 }
 
 enum Role {
