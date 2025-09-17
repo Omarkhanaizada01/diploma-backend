@@ -25,6 +25,27 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
+// root API — список доступных маршрутов
+app.get("/api", (req, res) => {
+  res.json({
+    message: "Добро пожаловать в API дипломного проекта!",
+    routes: {
+      public: [
+        { path: "/api/health", method: "GET", description: "Проверка работы сервера" },
+        { path: "/api/products", method: "GET", description: "Получение всех продуктов" },
+        { path: "/api/products/:id", method: "GET", description: "Получение продукта по ID" },
+        { path: "/api/categories", method: "GET", description: "Получение всех категорий" }
+      ],
+      protected: [
+        { path: "/api/users", method: "GET", description: "Список пользователей (требуется авторизация)" },
+        { path: "/api/products", method: "POST", description: "Создание продукта (требуется авторизация)" },
+        { path: "/api/products/:id", method: "PUT", description: "Редактирование продукта (требуется авторизация)" },
+        { path: "/api/products/:id", method: "DELETE", description: "Удаление продукта (требуется авторизация)" }
+      ]
+    }
+  });
+});
+
 // обработка неизвестных маршрутов
 app.use((req, res) => {
   res.status(404).json({ message: "Маршрут не найден" });
