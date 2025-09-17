@@ -15,9 +15,12 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true, 
+  credentials: true,
 };
 
-export default () => cors(corsOptions);
+const corsMiddleware = cors(corsOptions);
+
+export default corsMiddleware;
+
 
 

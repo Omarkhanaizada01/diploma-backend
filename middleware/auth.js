@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 
-// middleware auth Authorization токен через cookie 
-const authMiddleware = (req, res, next) => {
+export default function authMiddleware(req, res, next) {
   const token = req.cookies.token; // токен из cookie
 
   if (!token) {
@@ -15,7 +14,6 @@ const authMiddleware = (req, res, next) => {
   } catch (error) {
     return res.status(401).json({ message: "Неверный токен" });
   }
-};
+}
 
-export default authMiddleware;
 

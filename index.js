@@ -1,5 +1,5 @@
 import express from "express";
-import cors from "./middleware/cors.js"; 
+import corsMiddleware from "./middleware/cors.js"; 
 import cookieParser from "cookie-parser";
 
 import categoryRoutes from "./routes/category.js";
@@ -10,7 +10,7 @@ import uploadRoutes from "./routes/upload.js";
 const app = express();
 
 // middleware
-app.use(cors());
+app.use(corsMiddleware); // ✅ без ()
 app.use(express.json());
 app.use(cookieParser());
 
@@ -34,3 +34,4 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`🚀 Сервер запущен на порту ${PORT}`);
 });
+
