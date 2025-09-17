@@ -1,10 +1,8 @@
-// middleware/auth.js
-
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 // middleware auth Authorization токен через cookie 
 const authMiddleware = (req, res, next) => {
-  const token = req.cookies.token; // Получаем токен из cookie
+  const token = req.cookies.token; // токен из cookie
 
   if (!token) {
     return res.status(401).json({ message: "Нет токена" });
@@ -19,4 +17,5 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+export default authMiddleware;
+

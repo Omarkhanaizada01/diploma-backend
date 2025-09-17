@@ -1,5 +1,4 @@
-// middleware/cors.js
-const cors = require("cors");
+import cors from "cors";
 
 const allowedOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(",")
@@ -16,8 +15,9 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true, // ✅ обязательно, чтобы cookie ходили
+  credentials: true, 
 };
 
-module.exports = () => cors(corsOptions);
+export default () => cors(corsOptions);
+
 

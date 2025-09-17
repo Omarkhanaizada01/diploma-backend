@@ -1,16 +1,16 @@
-const express = require("express");
-const cors = require("./middleware/cors"); // функция cors
-const cookieParser = require("cookie-parser");
+import express from "express";
+import cors from "./middleware/cors.js"; 
+import cookieParser from "cookie-parser";
 
-const categoryRoutes = require("./routes/category");
-const productRoutes = require("./routes/products");
-const userRoutes = require("./routes/users");
-const uploadRoutes = require("./routes/upload");
+import categoryRoutes from "./routes/category.js";
+import productRoutes from "./routes/products.js";
+import userRoutes from "./routes/users.js";
+import uploadRoutes from "./routes/upload.js";
 
 const app = express();
 
 // middleware
-app.use(cors()); // вызов функции
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 

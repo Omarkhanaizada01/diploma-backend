@@ -1,18 +1,17 @@
-// backend/routes/upload.js
-const express = require("express");
-const upload = require("../middleware/upload");
+import express from "express";
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
 router.post("/", upload.single("image"), (req, res) => {
   try {
-    console.log("📂 Файл от клиента:", req.file); // 👈 лог
+    console.log("📂 Файл от клиента:", req.file);
     if (!req.file) {
       return res.status(400).json({ message: "Файл не получен" });
     }
 
     res.json({
-      imageUrl: req.file.path, // Cloudinary URL
+      imageUrl: req.file.path, 
     });
   } catch (error) {
     console.error("❌ Ошибка загрузки:", error);
@@ -20,4 +19,4 @@ router.post("/", upload.single("image"), (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

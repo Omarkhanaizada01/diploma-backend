@@ -1,8 +1,5 @@
-// routes/user.js
-const express = require("express");
-const router = express.Router();
-
-const {
+import express from "express";
+import {
   getAllUsers,
   getUserById,
   getCurrentUser,
@@ -11,11 +8,13 @@ const {
   deleteUser,
   login,
   logout,
-} = require("../controllers/userController");
+} from "../controllers/userController.js";
 
-const auth = require("../middleware/auth");
+import auth from "../middleware/auth.js";
 
-// 🔐 Авторизация (логин/логаут)
+const router = express.Router();
+
+// 🔐 Авторизация
 router.post("/login", login);
 router.post("/logout", logout);
 
@@ -29,4 +28,5 @@ router.post("/", createUser);
 router.put("/:id", auth, updateUser);
 router.delete("/:id", auth, deleteUser);
 
-module.exports = router;
+export default router;
+

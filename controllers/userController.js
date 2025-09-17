@@ -1,12 +1,11 @@
-// controllers/userController.js
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
 const prisma = new PrismaClient();
 
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-
 // Получить всех пользователей
-exports.getAllUsers = async (req, res) => {
+export const getAllUsers = async (req, res) => {
   try {
     const users = await prisma.user.findMany({
       select: { id: true, name: true, email: true, role: true },
@@ -18,7 +17,7 @@ exports.getAllUsers = async (req, res) => {
 };
 
 // Получить одного пользователя по ID
-exports.getUserById = async (req, res) => {
+export const getUserById = async (req, res) => {
   const id = Number(req.params.id);
   try {
     const user = await prisma.user.findUnique({
@@ -33,9 +32,9 @@ exports.getUserById = async (req, res) => {
 };
 
 // Получить текущего пользователя по JWT
-exports.getCurrentUser = async (req, res) => {
+export const getCurrentUser = async (req, res) => {
   try {
-    const { id } = req.user; // req.user создаётся в middleware/auth.js
+    const { id } = req.user;
     const user = await prisma.user.findUnique({
       where: { id },
       select: { id: true, name: true, email: true, role: true },
@@ -47,8 +46,8 @@ exports.getCurrentUser = async (req, res) => {
   }
 };
 
-// Создать пользователя (с хэшированием пароля)
-exports.createUser = async (req, res) => {
+// Создать пользователя
+export const createUser = async (req, res) => {
   const { name, email, password } = req.body;
   try {
     const existing = await prisma.user.findUnique({ where: { email } });
@@ -70,7 +69,7 @@ exports.createUser = async (req, res) => {
 };
 
 // Обновить пользователя
-exports.updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
   const id = Number(req.params.id);
   const { name, email, password } = req.body;
 
@@ -93,7 +92,7 @@ exports.updateUser = async (req, res) => {
 };
 
 // Удалить пользователя
-exports.deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
   const id = Number(req.params.id);
   try {
     const deletedUser = await prisma.user.delete({ where: { id } });
@@ -103,8 +102,8 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-// Логин с установкой токена в cookie
-exports.login = async (req, res) => {
+// Логин
+export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -124,7 +123,7 @@ exports.login = async (req, res) => {
       .cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // ✅ фикс для Vercel + Render
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
         maxAge: 24 * 60 * 60 * 1000,
       })
       .json({ message: "Вы вошли успешно" });
@@ -134,6 +133,7 @@ exports.login = async (req, res) => {
 };
 
 // Логаут
-exports.logout = (req, res) => {
+export const logout = (req, res) => {
   res.clearCookie("token").json({ message: "Вы вышли из системы" });
 };
+

@@ -1,23 +1,20 @@
-const express = require("express");
-const router = express.Router();
-const {
+// backend/routes/products.js
+import express from "express";
+import {
   getAllProducts,
   getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
-} = require("../controllers/productController");
+} from "../controllers/productController.js";
+import auth from "../middleware/auth.js";
 
-const auth = require("../middleware/auth");
-const isAdmin = require("../middleware/isAdmin");
+const router = express.Router();
 
-// Все могут просматривать
 router.get("/", getAllProducts);
 router.get("/:id", getProductById);
+router.post("/", auth, createProduct);
+router.put("/:id", auth, updateProduct);
+router.delete("/:id", auth, deleteProduct);
 
-// Только админ может изменять
-router.post("/", auth, isAdmin, createProduct);
-router.put("/:id", auth, isAdmin, updateProduct);
-router.delete("/:id", auth, isAdmin, deleteProduct);
-
-module.exports = router;
+export default router;
